@@ -1,0 +1,14 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.d-flex {
+  height: 100vh;
+}
+
+.flex-grow-1 {
+  background-color: #f8f9fa;
+  overflow-y: auto;
+}

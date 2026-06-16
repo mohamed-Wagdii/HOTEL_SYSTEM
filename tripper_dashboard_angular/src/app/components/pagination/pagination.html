@@ -1,0 +1,68 @@
+<div class="pagination-container">
+  <div class="pagination-info">
+    <span class="text-muted">
+      عرض {{ startItem }} - {{ endItem }} من {{ totalItems }} نتيجة
+    </span>
+  </div>
+
+  <nav aria-label="Pagination">
+    <ul class="pagination pagination-modern">
+      <!-- Previous Button -->
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button 
+          class="page-link" 
+          (click)="onPageChange(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          aria-label="Previous">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </li>
+
+      <!-- First Page -->
+      <li class="page-item" [class.active]="currentPage === 1" *ngIf="totalPages > 1">
+        <button class="page-link" (click)="onPageChange(1)">1</button>
+      </li>
+
+      <!-- Dots before -->
+      <li class="page-item disabled" *ngIf="currentPage > 3">
+        <span class="page-link">...</span>
+      </li>
+
+      <!-- Middle Pages -->
+      <li 
+        class="page-item" 
+        [class.active]="page === currentPage"
+        *ngFor="let page of getVisiblePages()">
+        <button class="page-link" (click)="onPageChange(page)">
+          {{ page }}
+        </button>
+      </li>
+
+      <!-- Dots after -->
+      <li class="page-item disabled" *ngIf="currentPage < totalPages - 2">
+        <span class="page-link">...</span>
+      </li>
+
+      <!-- Last Page -->
+      <li 
+        class="page-item" 
+        [class.active]="currentPage === totalPages"
+        *ngIf="totalPages > 1 && currentPage !== totalPages">
+        <button class="page-link" (click)="onPageChange(totalPages)">
+          {{ totalPages }}
+        </button>
+      </li>
+
+      <!-- Next Button -->
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button 
+          class="page-link" 
+          (click)="onPageChange(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          aria-label="Next">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>

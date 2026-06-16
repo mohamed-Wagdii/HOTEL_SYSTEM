@@ -1,0 +1,112 @@
+<div *ngIf="user" class="modal fade show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title">User Details</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeModal.emit()"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row">
+
+          <!-- Left: User Image & Basic Info -->
+          <div class="col-md-4 text-center mb-3">
+            <img [src]="user.image || 'https://via.placeholder.com/120'" class="rounded-circle mb-2" width="120" height="120" alt="User image" />
+            <p class="mb-1"><strong>{{ user.name }}</strong></p>
+            <p class="mb-0"><b>ID:</b> {{ user._id }}</p>
+          </div>
+
+          <!-- Right: User Details -->
+          <div class="col-md-8">
+            <ul class="list-group">
+              <li class="list-group-item"><b>Email:</b> {{ user.email }}</li>
+              <li class="list-group-item"><b>Phone:</b> {{ user.phone }}</li>
+              <li class="list-group-item"><b>Role(s):</b> {{ user.role.join(', ') }}</li>
+              <li class="list-group-item"><b>Active Role:</b> {{ user.activeRole }}</li>
+              <li class="list-group-item">
+                <b>Verification:</b>
+                <span class="badge"
+                      [ngClass]="{
+                        'bg-success': user.isVerified === 'verified',
+                        'bg-danger': user.isVerified === 'rejected',
+                        'bg-warning text-dark': user.isVerified === 'pending',
+                        'bg-secondary': !user.isVerified || user.isVerified === 'notVerified'
+                      }">
+                  {{
+                    user.isVerified === 'verified' ? 'Verified' :
+                    user.isVerified === 'rejected' ? 'Rejected' :
+                    user.isVerified === 'pending' ? 'Pending Approval' :
+                    'Not Verified'
+                  }}
+                </span>
+              </li>
+
+              <!-- Identity Image -->
+              <li class="list-group-item" *ngIf="user.identityImageUrl">
+                <b>Identity Image:</b><br />
+                <img [src]="user.identityImageUrl" class="img-thumbnail mt-2" width="200" alt="Identity Image" />
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div *ngIf="user?.role?.includes('host')" class="mt-4">
+
+          <h5 class="text-primary">Hotels Added</h5>
+          <div *ngIf="hotels.length === 0" class="text-muted">No hotels found.</div>
+          <ul class="list-group mb-3" *ngIf="hotels.length > 0">
+            <li class="list-group-item" *ngFor="let h of hotels">
+              <b>{{ h.name }}</b> — {{ h.address.city }}, {{ h.address.country }}
+            </li>
+          </ul>
+
+          <!-- Experiences -->
+          <h5 class="text-primary">Experiences Added</h5>
+          <div *ngIf="experiences.length === 0" class="text-muted">No experiences found.</div>
+          <ul class="list-group" *ngIf="experiences.length > 0">
+            <li class="list-group-item" *ngFor="let ex of experiences">
+              <b>{{ ex.name }}</b> — {{ ex.address.city }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Reason Input Section -->
+        <div *ngIf="showReasonInput" class="mt-4 p-3 border rounded bg-light">
+          <h6 class="mb-3">
+            <span *ngIf="actionType === 'verify'" class="text-success">✓ Verify User</span>
+            <span *ngIf="actionType === 'reject'" class="text-danger">✗ Reject User</span>
+          </h6>
+          <div class="mb-3">
+            <label class="form-label">
+              <span *ngIf="actionType === 'verify'">Reason for approval:</span>
+              <span *ngIf="actionType === 'reject'">Reason for rejection:</span>
+            </label>
+            <textarea 
+              class="form-control" 
+              [ngClass]="{'is-invalid': errorMessage}"
+              rows="4" 
+              [(ngModel)]="reason" 
+              placeholder="Enter your reason here... (minimum 10 characters)"
+            ></textarea>
+            <div *ngIf="errorMessage" class="invalid-feedback d-block">
+              {{ errorMessage }}
+            </div>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary" (click)="confirmAction()">Confirm</button>
+            <button class="btn btn-secondary" (click)="cancelAction()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer" *ngIf="!showReasonInput">
+        <button class="btn btn-success" (click)="onVerifyClick()">Verify</button>
+        <button class="btn btn-danger" (click)="onRejectClick()">Reject</button>
+        <button class="btn btn-secondary" (click)="closeModal.emit()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,56 @@
+<div class="table-responsive">
+  <table class="table table-striped table-hover align-middle">
+    <thead class="table-dark text-center">
+      <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>City</th>
+        <th>Country</th>
+        <th>Price</th>
+        <th>Rating</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody class="text-center">
+      <tr *ngFor="let experience of pagedExperiences; trackBy: trackById">
+        <td>
+          <img
+            [src]="experience?.images?.[0]"
+            width="80"
+            height="60"
+            class="rounded"
+            alt="Experience image"
+          />
+        </td>
+        <td>{{ experience.name }}</td>
+        <td>{{ experience.address.city }}</td>
+        <td>{{ experience.address.country }}</td>
+        <td>${{ experience.price }}</td>
+        <td>
+          <span class="badge bg-warning text-dark">
+            ★ {{ experience.starRating.toFixed(1) }}
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-info me-2" (click)="onView(experience)">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="onDelete(experience)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="experiences.length === 0">
+        <td colspan="7" class="text-muted text-center">No experiences found.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-pagination
+  [totalItems]="experiences.length"
+  [itemsPerPage]="itemsPerPage"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
+  (itemsPerPageChange)="onItemsPerPageChange($event)"
+></app-pagination>

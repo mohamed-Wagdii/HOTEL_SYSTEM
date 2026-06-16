@@ -1,0 +1,178 @@
+<div class="container-fluid mt-4 px-4">
+  <!-- Header -->
+  <div class="mb-4">
+    <h1 class="display-5 fw-bold text-dark mb-2">Places Management</h1>
+    <p class="text-muted">Admin Dashboard - View & Manage Tourist Places</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm bg-primary text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="text-white-50 mb-1">Total Places</h6>
+              <h2 class="mb-0 fw-bold">{{ stats.total }}</h2>
+            </div>
+            <i class="bi bi-geo-alt fs-1 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm bg-success text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="text-white-50 mb-1">Countries</h6>
+              <h2 class="mb-0 fw-bold">{{ stats.countries }}</h2>
+            </div>
+            <i class="bi bi-globe fs-1 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm bg-warning text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="text-white-50 mb-1">Cities</h6>
+              <h2 class="mb-0 fw-bold">{{ stats.cities }}</h2>
+            </div>
+            <i class="bi bi-map fs-1 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm bg-info text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="text-white-50 mb-1">Avg Rating</h6>
+              <h2 class="mb-0 fw-bold">★ {{ stats.averageRating.toFixed(1) }}</h2>
+            </div>
+            <i class="bi bi-star-fill fs-1 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters & Add Button -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="🔍 Search places..." [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()" />
+        </div>
+
+        <div class="col-md-3">
+          <select class="form-select" [(ngModel)]="filterCity" (ngModelChange)="onCityChange()">
+            <option value="">All Cities</option>
+            <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <button class="btn btn-primary w-100" (click)="openAddModal()">
+            <i class="bi bi-plus-circle me-1"></i>
+            Add Place
+          </button>
+        </div>
+
+        <div class="col-md-3 text-end">
+          <span class="badge bg-light text-dark fs-6 py-2 px-3">
+            Showing {{ filteredPlaces.length }} of {{ places.length }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div *ngIf="!loading" class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-dark">
+            <tr>
+              <th class="px-4 py-3">Image</th>
+              <th class="px-4 py-3">Name</th>
+              <th class="px-4 py-3">Location</th>
+              <th class="px-4 py-3">Rating</th>
+              <th class="px-4 py-3">Description</th>
+              <th class="px-4 py-3 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let place of pagedFilteredPlaces; trackBy: trackById">
+              <td class="px-4 py-3">
+                <img
+                  [src]="place.images && place.images.length > 0 ? place.images[0] : 'https://via.placeholder.com/80'"
+                  width="80" height="60" class="rounded shadow-sm object-fit-cover" alt="Place" />
+              </td>
+              <td class="px-4 py-3 fw-semibold">{{ place.name }}</td>
+              <td class="px-4 py-3">
+                <i class="bi bi-geo-alt text-danger me-1"></i>
+                {{ place.address?.city ?? 'N/A' }}, {{ place.address?.country ?? 'N/A' }}
+              </td>
+              <td class="px-4 py-3">
+                <span class="badge bg-warning text-dark">
+                  ★ {{ place.starRating?.toFixed(1) || 'N/A' }}
+                </span>
+              </td>
+              <td class="px-4 py-3">
+                <span class="text-muted">
+                  {{ (place.description?.substring(0, 50)) ?? 'No description' }}
+                  {{ place.description && place.description.length > 50 ? '...' : '' }}
+                </span>
+              </td>
+              <td class="px-4 py-3">
+                <div class="d-flex justify-content-center gap-2">
+                  <button class="btn btn-sm btn-info text-white" (click)="openEditModal(place)" title="Edit Place">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="deletePlace(place)" title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="filteredPlaces.length === 0">
+              <td colspan="6" class="text-center py-5 text-muted">
+                <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                No places found
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+    <app-pagination
+      [totalItems]="filteredPlaces.length"
+      [itemsPerPage]="itemsPerPage"
+      [currentPage]="currentPage"
+      (pageChange)="onPage($event)"
+      (itemsPerPageChange)="onItemsPerPageChange($event)"
+    ></app-pagination>
+
+  <!-- Modal -->
+  <app-place-modal *ngIf="showModal" [editMode]="editMode" [place]="selectedPlace" (onClose)="closeModal()"
+    (onSave)="savePlace($event)"></app-place-modal>
+</div>

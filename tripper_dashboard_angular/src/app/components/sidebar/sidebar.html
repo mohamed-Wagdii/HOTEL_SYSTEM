@@ -1,0 +1,20 @@
+<div class="sidebar bg-dark text-white p-3 d-flex flex-column">
+  <div class="mb-4 text-center">
+    <i class="bi bi-globe2 fs-3"></i>
+    <h5 class="mt-2">Tripper Admin</h5>
+  </div>
+
+  <nav class="nav flex-column">
+    @for (link of links; track link.path) {
+      <a
+        [routerLink]="link.path"
+        class="nav-link text-white mb-2 rounded py-2 px-3"
+        [ngClass]="{ active: activeLink() === link.path }"
+        (click)="setActive(link.path)"
+      >
+        <i class="bi me-2" [class]="link.icon"></i>
+        {{ link.label }}
+      </a>
+    }
+  </nav>
+</div>

@@ -1,0 +1,54 @@
+<table class="table table-hover align-middle shadow-sm">
+  <thead class="table-light">
+    <tr>
+      <th>Image</th>
+      <th>Name</th>
+      <th>City</th>
+      <th>Country</th>
+      <th>Rating</th>
+      <th class="text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (place of pagedPlaces; track place._id) {
+      <tr>
+        <td>
+          <img
+            [src]="place?.images?.[0] ?? 'https://placehold.co/80x60'"
+            width="80"
+            height="60"
+            class="rounded"
+            alt="place image"
+          />
+        </td>
+        <td>{{ place?.name ?? 'Unknown' }}</td>
+        <td>{{ place?.address?.city ?? '-' }}</td>
+        <td>{{ place?.address?.country ?? '-' }}</td>
+        <td>
+          <span class="badge bg-warning text-dark">
+            ★ {{ place?.starRating?.toFixed(1) ?? '0.0' }}
+          </span>
+        </td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-info me-2" (click)="onViewPlace(place?._id ?? '')">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-primary me-2" (click)="onEdit.emit(place)">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-danger" (click)="onDelete.emit(place?._id ?? '')">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<app-pagination
+  [totalItems]="places.length"
+  [itemsPerPage]="itemsPerPage"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
+  (itemsPerPageChange)="onItemsPerPageChange($event)"
+></app-pagination>

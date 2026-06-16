@@ -1,0 +1,70 @@
+<div class="table-responsive">
+  <table class="table table-striped table-hover align-middle">
+    <thead class="table-dark text-center">
+      <tr>
+        <th>Guest</th>
+        <th>Hotel / Experience</th>
+        <th>Check-In</th>
+        <th>Check-Out</th>
+        <th>Guests</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody class="text-center">
+      @for (reservation of pagedReservations; track reservation.id) {
+        <tr>
+          <td>
+            <strong>{{ reservation.guestName }}</strong><br />
+            <small class="text-muted">{{ reservation.guestEmail }}</small>
+          </td>
+          <td>
+            @if (reservation.hotelName) {
+              <span class="fw-semibold text-primary">{{ reservation.hotelName }}</span>
+            } @else if (reservation.experienceName) {
+              <span class="fw-semibold text-success">{{ reservation.experienceName }}</span>
+            } @else {
+              <span class="text-muted">N/A</span>
+            }
+          </td>
+          <td><small>{{ reservation.checkIn }}</small></td>
+          <td><small>{{ reservation.checkOut }}</small></td>
+          <td>{{ reservation.guestsCount }}</td>
+          <td class="fw-bold text-dark">${{ reservation.totalPrice }}</td>
+          <td>
+            <span
+              class="badge"
+              [class.bg-warning]="reservation.status === 'pending'"
+              [class.bg-success]="reservation.status === 'confirmed'"
+              [class.bg-danger]="reservation.status === 'cancelled'"
+              [class.bg-secondary]="reservation.status === 'completed'"
+            >
+              {{ reservation.status }}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary me-2" (click)="onView(reservation)">
+              <i class="bi bi-eye"></i>
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="8" class="text-muted text-center py-3">
+            No reservations found.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<app-pagination
+  [totalItems]="reservations.length"
+  [itemsPerPage]="itemsPerPage"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
+  (itemsPerPageChange)="onItemsPerPageChange($event)"
+></app-pagination>

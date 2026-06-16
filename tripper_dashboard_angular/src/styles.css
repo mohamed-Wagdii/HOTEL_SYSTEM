@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #fafafa;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  background: #1a1a1a;   /* غيّر اللون حسب التصميم بتاعك */
+  z-index: 1030;
+  overflow-y: auto;
+}
+
+
+.main-content {
+  margin-left: 280px;
+  min-height: 100dvh;
+  background-color: #f8f9fa;
+  padding: 1rem;
+}
+
+
+.main-content {
+  margin-left: 220px;     /* نفس عرض الـ sidebar بالظبط */
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+/* لو عايز responsive وتخفي الـ sidebar على الموبايل */
+@media (max-width: 992px) {
+  .main-content {
+    margin-left: 0 !important;
+  }
+}

@@ -1,0 +1,110 @@
+<div class="modal-backdrop fade show"></div>
+<div class="custom-modal card shadow-lg" [ngClass]="{ 'view-mode': viewMode }">
+  <div class="card-header" [ngClass]="{
+    'bg-primary text-white': editMode,
+    'bg-success text-white': !editMode && !viewMode,
+    'bg-secondary text-white': viewMode
+  }">
+    <h5 class="mb-0">
+      {{ viewMode ? 'View Place' : editMode ? 'Edit Place' : 'Add New Place' }}
+    </h5>
+  </div>
+
+  <div class="card-body">
+    <form (ngSubmit)="save()" enctype="multipart/form-data" #placeForm="ngForm">
+      <!-- Name -->
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="formData.name"
+          name="name"
+          [disabled]="viewMode"
+          required
+          #nameCtrl="ngModel"
+        />
+        <div class="text-danger mt-1" *ngIf="nameCtrl.invalid && nameCtrl.touched">
+          Name is required.
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea
+          class="form-control"
+          [(ngModel)]="formData.description"
+          name="description"
+          [disabled]="viewMode"
+          required
+          #descCtrl="ngModel"
+        ></textarea>
+        <div class="text-danger mt-1" *ngIf="descCtrl.invalid && descCtrl.touched">
+          Description is required.
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Country</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="formData.address.country"
+            name="addressCountry"
+            [disabled]="viewMode"
+            required
+            #countryCtrl="ngModel"
+          />
+          <div class="text-danger mt-1" *ngIf="countryCtrl.invalid && countryCtrl.touched">
+            Country is required.
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">City</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="formData.address.city"
+            name="addressCity"
+            [disabled]="viewMode"
+            required
+            #cityCtrl="ngModel"
+          />
+          <div class="text-danger mt-1" *ngIf="cityCtrl.invalid && cityCtrl.touched">
+            City is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3" *ngIf="!viewMode">
+        <label class="form-label">Images</label>
+        <input
+          type="file"
+          class="form-control"
+          (change)="onFilesSelected($event)"
+          multiple
+        />
+      </div>
+
+      <div class="image-preview" *ngIf="formData.images?.length">
+        <div *ngFor="let img of formData.images" class="img-box">
+          <img [src]="img.url || img" alt="Place Image" />
+        </div>
+      </div>
+
+      <div class="card-footer text-end mt-3">
+        <button class="btn btn-secondary me-2" type="button" (click)="onClose.emit()">Close</button>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="placeForm.invalid || viewMode"
+          *ngIf="!viewMode"
+        >
+          {{ editMode ? 'Save Changes' : 'Add Place' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

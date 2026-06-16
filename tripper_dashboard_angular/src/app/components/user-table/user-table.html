@@ -1,0 +1,59 @@
+<div class="table-responsive">
+  <table class="table table-hover table-bordered align-middle">
+    <thead class="table-dark text-center">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Verified</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody class="text-center">
+      @for (user of pagedUsers; track user._id) {
+        <tr>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.phone }}</td>
+          <td>{{ user.role.join(', ') || 'No Role' }}</td>
+          <td>
+            <span class="badge" [ngClass]="{
+              'bg-success': user.isVerified === 'verified',
+              'bg-danger': user.isVerified === 'rejected',
+              'bg-warning text-dark': user.isVerified === 'pending',
+              'bg-secondary': user.isVerified === 'notVerified' || !user.isVerified
+            }">
+              {{
+                user.isVerified === 'verified'
+                  ? 'Verified'
+                  : user.isVerified === 'rejected'
+                  ? 'Rejected'
+                  : user.isVerified === 'pending'
+                  ? 'Pending'
+                  : 'Not Verified'
+              }}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-info me-2" (click)="onView(user)">
+              <i class="bi bi-eye"></i>
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="7" class="text-muted text-center">No users found.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<app-pagination
+  [totalItems]="users.length"
+  [itemsPerPage]="itemsPerPage"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
+  (itemsPerPageChange)="onItemsPerPageChange($event)"
+></app-pagination>

@@ -1,0 +1,40 @@
+@if (reservation) {
+  <div class="reservation-overlay">
+    <div class="reservation-card shadow-lg rounded-4 bg-white p-4">
+      <button class="btn-close float-end" (click)="closeModal.emit()"></button>
+
+      <h4 class="fw-bold text-primary mb-3">Reservation Details</h4>
+
+      <div class="reservation-body d-flex flex-column gap-3">
+        <div class="reservation-info">
+          <p><strong>ID:</strong> {{ reservation.id }}</p>
+          <p><strong>Guest:</strong> {{ reservation.guestName }} ({{ reservation.guestEmail }})</p>
+
+          @if (reservation.hotelName) {
+            <p><strong>Hotel:</strong> {{ reservation.hotelName }}</p>
+          } @else if (reservation.experienceName) {
+            <p><strong>Experience:</strong> {{ reservation.experienceName }}</p>
+          }
+
+          <p><strong>Check-In:</strong> {{ reservation.checkIn }}</p>
+          <p><strong>Check-Out:</strong> {{ reservation.checkOut }}</p>
+          <p><strong>Guests Count:</strong> {{ reservation.guestsCount }}</p>
+          <p><strong>Total Price:</strong> ${{ reservation.totalPrice }}</p>
+
+          <p>
+            <strong>Status:</strong>
+            <span
+              class="badge"
+              [class.bg-warning]="reservation.status === 'pending'"
+              [class.bg-success]="reservation.status === 'confirmed'"
+              [class.bg-danger]="reservation.status === 'cancelled'"
+              [class.bg-secondary]="reservation.status === 'completed'"
+            >
+              {{ reservation.status }}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+}
