@@ -3,10 +3,7 @@ import axiosInstance from "../axiousInstance/axoiusInstance";
 const favoriteService = {
   addFavorite: async (itemId, itemType) => {
     try {
-      const response = await axiosInstance.post("/favorite", {
-        itemId,
-        itemType
-      });
+      const response = await axiosInstance.post("/favorites", { itemId, itemType });
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -15,7 +12,7 @@ const favoriteService = {
 
   removeFavorite: async (itemId, itemType) => {
     try {
-      const response = await axiosInstance.delete("/favorite", {
+      const response = await axiosInstance.delete("/favorites", {
         data: { itemId, itemType }
       });
       return response.data;
@@ -26,7 +23,7 @@ const favoriteService = {
 
   getUserFavorites: async () => {
     try {
-      const response = await axiosInstance.get("/favorite");
+      const response = await axiosInstance.get("/favorites");
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -35,7 +32,7 @@ const favoriteService = {
 
   checkFavorite: async (itemId, itemType) => {
     try {
-      const response = await axiosInstance.get("/favorite/check", {
+      const response = await axiosInstance.get("/favorites/check", {
         params: { itemId, itemType }
       });
       return response.data;

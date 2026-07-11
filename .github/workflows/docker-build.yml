@@ -1,0 +1,36 @@
+name: Docker Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+
+    - name: Build Backend Image
+      run: |
+        docker build \
+        -f DevOps/docker/Dockerfile.backend \
+        -t tripper-backend .
+
+
+    - name: Build React Image
+      run: |
+        docker build \
+        -f DevOps/docker/Dockerfile.react \
+        -t tripper-frontend .
+
+
+    - name: Build Angular Image
+      run: |
+        docker build \
+        -f DevOps/docker/Dockerfile.angular \
+        -t tripper-dashboard .
