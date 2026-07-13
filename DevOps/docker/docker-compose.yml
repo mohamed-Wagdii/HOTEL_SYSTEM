@@ -51,15 +51,14 @@ services:
       - hotel-network
 
   nginx:
-    image: nginx:alpine
+    build:
+      context: ../..
+      dockerfile: DevOps/docker/nginx/Dockerfile.nginx
 
     container_name: tripper-nginx
 
     ports:
       - "80:80"
-
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
 
     depends_on:
       - frontend
