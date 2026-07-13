@@ -1,16 +1,54 @@
 services:
-
   backend:
     build:
       context: ../..
       dockerfile: DevOps/docker/Dockerfile.backend
+
+    ports:
+      - "4000:4000"
+
+    env_file:
+      - ../tripper_backend_api/.env
+
+    depends_on:
+      - mongo
+
+    restart: unless-stopped
+
+    networks:
+      - hotel-network
 
   frontend:
     build:
       context: ../..
       dockerfile: DevOps/docker/Dockerfile.react
 
+    ports:
+      - "3000:80"
+
+    depends_on:
+      - backend
+
+    restart: unless-stopped
+
+    networks:
+      - hotel-network
+
   dashboard:
     build:
       context: ../..
       dockerfile: DevOps/docker/Dockerfile.angular
+
+    ports:
+      - "4200:80"
+
+    depends_on:
+      - backend
+
+    restart: unless-stopped
+
+    networks:
+      - hotel-network
+
+networks:
+  hotel-network:
