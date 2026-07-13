@@ -8,10 +8,9 @@ services:
       - "4000:4000"
 
     env_file:
-      - ../tripper_backend_api/.env
+      - ../../tripper_backend_api/.env
 
-    depends_on:
-      - mongo
+  
 
     restart: unless-stopped
 
@@ -52,8 +51,8 @@ services:
 
   nginx:
     build:
-      context: ../..
-      dockerfile: DevOps/docker/nginx/Dockerfile.nginx
+      context: ../nginx
+      dockerfile: Dockerfile.nginx
 
     container_name: tripper-nginx
 
