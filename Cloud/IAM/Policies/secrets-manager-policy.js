@@ -1,0 +1,17 @@
+const secretsManagerPolicy = {
+  Version: "2012-10-17",
+
+  Statement: [
+    {
+      Sid: "SecretsManagerReadAccess",
+      Effect: "Allow",
+      Action: [
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret"
+      ],
+      Resource: "*"
+    }
+  ]
+};
+
+export default secretsManagerPolicy;
